@@ -1,4 +1,7 @@
 $(document).ready(function(){
+  var table = $('#example').DataTable( {
+    searching: false
+});
     $(".searchbtn").click(function(){
         var searchText=$("#pName").val();
       $.ajax({
@@ -8,12 +11,19 @@ $(document).ready(function(){
         success: function(res) {
           if(res.success=="1"){
             $('#message').html("");
-            console.log(res+""+res.data.length);
-            $.each(res.data, function(i, data){
-              $('#message').append("Product Name : "+data.prod_name+" Unit Cost : "+data.unit_cost+"</br>");
-            })
+            $('#example').DataTable({
+              destroy: true,
+              searching: false,
+              "data": res.data,
+                    "columns": [
+                    { "data": "prod_id" },
+                    { "data": "prod_name" },
+                    { "data": "unit_cost" }
+
+                   ]
+            });
         }else{
-          $('#message').html(res.message);
+          table.clear().draw();
         }
         }
     });
